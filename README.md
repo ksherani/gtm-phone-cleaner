@@ -1,4 +1,8 @@
 # gtm-phone-cleaner
+
+CODE: https://github.com/ksherani/gtm-phone-cleaner/blob/main/code
+TUTORIAL: https://youtu.be/JOIFpc71g4U
+
 This JavaScript snippet removes brackets (), dashes -, slashes /, spaces, +1 or leading 1  from phone numbers before tracking them in Google Analytics 4 (GA4).
 
 GTM Phone Cleaner – Clean Phone Numbers for GA4
