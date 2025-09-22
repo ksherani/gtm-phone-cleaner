@@ -1,0 +1,41 @@
+function () {
+  // 1) Try Click URL first (works on <a href="tel:...">)
+  var href = {{Click URL}} || '';
+
+  // 2) If empty, walk up from Click Element to find the nearest <a href>
+  if (!href) {
+    var el = {{Click Element}};
+    while (el && el.nodeType === 1) {
+      if (el.tagName === 'A' && el.getAttribute('href')) {
+        href = el.getAttribute('href');
+        break;
+      }
+      el = el.parentElement;
+    }
+  }
+
+  if (!href) return '';
+
+  // 3) Decode percent-encoding safely
+  try { href = decodeURIComponent(href); } catch (e) {}
+
+  // 4) Require tel: scheme
+  var m = href.match(/^tel:(.*)$/i);
+  if (!m) return '';
+
+  var numPart = m[1];
+
+  // 5) Remove any query/params (e.g., ;ext=123 or ?foo=bar)
+  numPart = numPart.replace(/([;?].*)$/, '');
+
+  // 6) Drop common inline extension markers at the end (x123 / ext. 123)
+  numPart = numPart.replace(/\b(?:ext\.?|x)\s*\d+$/i, '');
+
+  // 7) Keep digits only
+  var digits = (numPart || '').replace(/\D+/g, '');
+
+  // 8) If 11 digits and starts with '1', drop it (US country code)
+  if (/^1\d{10}$/.test(digits)) digits = digits.slice(1);
+
+  return digits; // e.g., "1234567890"
+}
